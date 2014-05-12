@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#d4e1f5"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/evintr"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="evintr"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#717070" />
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:fillViewport="true" >
+
+        <TableLayout
+            android:id="@+id/addtable"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="fill">
+            
+            <!--<TableRow
+                android:id="@+id/nameRow"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+                
+                <TextView
+                    android:id="@+id/nameLabel"
+                    android:text="Event Name*:"
+                    android:layout_width="18pt"
+                    android:layout_height="wrap_content"/>
+
+                <EditText
+                    android:id="@+id/nameText"
+                    android:layout_width="54pt"
+                    android:layout_height="wrap_content"/>
+                
+            </TableRow>
+            
+            <TableRow
+                android:id="@+id/zipRow"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+                
+                <TextView
+                    android:id="@+id/zipLabel"
+                    android:text="Event ZIP*:"
+                    android:layout_width="18pt"
+                    android:layout_height="wrap_content"/>
+                
+                <EditText
+                    android:id="@+id/zipText"
+                    android:layout_width="54pt"
+                    android:layout_height="wrap_content"/>
+                
+            </TableRow>-->
+            
+        </TableLayout>
+        
+    </ScrollView>
+
+</LinearLayout>

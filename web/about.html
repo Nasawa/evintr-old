@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<style type="text/css">
+div
+{
+	width: 800px;
+}
+img
+{
+	border-radius: 5px;
+}
+</style>
+
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="nearby.js"></script>
+
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+<title>evintr</title>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-32170936-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</head>
+
+<body style="background-color: #d4e1f4; font-family: 'Open Sans', sans-serif;">
+
+<center>
+<div class="header" style="min-height:50px;">
+	<table align="center" style="width: 100%">
+		<tr>
+			<td align="left" style="width: 50%" onclick="window.location='homepage.html'">
+			<h1>
+			<span style="color: rgb(113, 112, 112); font-family: 'Open Sans', sans-serif; font-size: 45px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: 26px; orphans: 2; text-align: -webkit-auto; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; display: inline !important; float: none; ">
+			evintr
+			</span>
+			</h1>
+			<h3>
+			<span style="color: rgb(113, 112, 112); font-family: 'Open Sans', sans-serif; font-size: 19px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: 26px; orphans: 2; text-align: -webkit-auto; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; display: inline !important; float: none; ">
+			The Event Engine
+			</span>
+			</h3>
+			</td>
+			<td align="right">
+			<div align="left" style="width:95%;">
+			<form action="results.html" id="form" style="display:inline;">
+				<select name="type" id="typebar" onchange="bartypeChange()">
+					<option value="All">Search All                      </option>					
+					<option value="Sports">Sports</option>
+					<option value="Movies">Movies</option>
+					<option value="Night Life">Night Life</option>
+					<option value="Sales">Sales</option>
+					<option value="Parks">Parks</option>
+					<option value="Music">Music</option>
+					<option value="Arts">Arts</option>
+					<option value="Parties">Parties</option>
+					<option value="Other">Other</option>				
+				</select>
+			<input type="text" name="search" id="zipbar" style="border-radius: 5px; padding: 0px;" onClick="value='';"  value="Enter ZIP..." size="7"/><input type="submit" name="go" value="Go!"/><br/>
+			<select name="subtype" style="visibility: hidden;" id="subtypebar">
+			</select>
+
+			</form>
+			</div>
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="body" style="min-height:500px; background-color:white; border-radius:5px;">
+
+<form method="POST" target="_self" action="contact.php">
+
+<div align="right">
+<table>
+<tr><td><b>Name:</b></td><td><input type="text" name="Name"></td></tr>
+<tr><td><b>Email*:</b></td><td><input type="email" required="required" id="em" name="Email"></td></tr>
+<tr><td><b>Subject:</b></td><td><input type="text" name="Subject"></td></tr>
+<tr><td><b>Message*:</b></td><td><textarea required="required" id="msg" name="Message" rows="7"></textarea></td></tr>
+<tr><td>&nbsp;</td><td><input type="submit" class="button" value="Submit"></td></tr>
+</table>
+
+</div>
+
+</form>
+
+
+<!--<div align="left" style="top:500; position:fixed">
+<img src="Steven.png" width="100px" height="100px"/><img src="Christopher.png" width="100px" height="100px"/>
+</div>-->
+</div>
+
+<script type="text/javascript">
+$(document).ready(function()
+{
+	$(".button").click(function(event)
+	{
+		if (document.getElementById("msg").value.length < 2 || document.getElementById("em").value.length < 2)
+			event.preventDefault();
+	});
+});
+</script>
+
+
+<div class="footer" >
+	<table cellpadding="0" cellspacing="0" style="width: 100%">
+		<tr>
+			<td align="left">
+			<span style="color: rgb(113, 112, 112); font-family: 'Open Sans', sans-serif; font-size: 19px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: 26px; orphans: 2; text-align: -webkit-auto; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; display: inline !important; float: none; ">
+			© Christopher Johnson
+			</span>
+			</td>
+			<td align="left" width="10%">
+			<a href="about.html">About Us</a>
+			</td>
+		</tr>
+	</table>
+</div>
+</center>
+</body>
+
+</html>

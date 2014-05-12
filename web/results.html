@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<style type="text/css">
+div
+{
+	width: 800px;
+}
+.tabletr :hover
+{
+	background-color:#8bb5f4;
+}
+</style>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="nearby.js"></script>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+<title>evintr</title>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-32170936-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+<link rel="icon" type="image/png" href="favicon.ico">
+</head>
+
+
+
+<body style="background-color: #d4e1f4; font-family: 'Open Sans', sans-serif;">
+<center>
+<div class="header" style="min-height:50px;">
+	<table align="center" style="width: 100%">
+		<tr>
+			<td align="left" style="width: 50%" onclick="window.location='homepage.html'">
+			<h1>
+			<span style="color: rgb(113, 112, 112); font-family: 'Open Sans', sans-serif; font-size: 45px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: 26px; orphans: 2; text-align: -webkit-auto; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; display: inline !important; float: none; ">
+			evintr
+			</span>
+			</h1>
+			<h3>
+			<span style="color: rgb(113, 112, 112); font-family: 'Open Sans', sans-serif; font-size: 19px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: 26px; orphans: 2; text-align: -webkit-auto; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; display: inline !important; float: none; ">
+			The Event Engine
+			</span>
+			</h3>
+			</td>
+			<td align="right">
+			<div align="left" style="width:95%;">			
+			<form action="results.html" id="form" style="display:inline;">
+				<select name="type" id="typebar" onchange="bartypeChange()">
+					<option value="All">Search All                      </option>
+					<option value="Sports">Sports</option>
+					<option value="Movies">Movies</option>
+					<option value="Night Life">Night Life</option>
+					<option value="Sales">Sales</option>
+					<option value="Parks">Parks</option>
+					<option value="Music">Music</option>
+					<option value="Arts">Arts</option>
+					<option value="Parties">Parties</option>
+					<option value="Other">Other</option>
+				</select>
+			<input type="text" name="search" id="zipbar" style="border-radius: 5px; padding: 0px;" onClick="value='';"  value="Enter ZIP..." size="7"/><input type="submit" name="go" value="Go!"/><br/>
+			<select name="subtype" style="visibility: hidden;" id="subtypebar"></select>
+
+			</form>
+			</div>
+			</td>
+		</tr>
+	</table>
+</div>
+
+<div class="body" style="min-height:500px;" id="body">
+	<table align="left" cellpadding="5" width="100%" class="infotable" style="font-weight:bold">
+		
+	</table>
+</div>
+
+<script type="text/javascript">
+function getUrlVars() 
+{
+    var vars = {};
+    var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) 
+    {
+        vars[key] = value;
+    });
+    return vars;
+}
+
+var eventArray = new Array();
+var nameup = false;
+var zipup = false;
+var priceup = false;
+var typeup = false;
+var page = parseInt(getUrlVars()["page"], 0);
+if (page * 0 !== 0)
+	page = 0;
+
+$(document).ready(function()
+{
+	var i = 0;
+	var apizip;
+		
+	if (getUrlVars()["search"] == "" || getUrlVars()["search"] == "Enter+ZIP...")
+		apizip = ""
+	else
+		for(var k = 0; k < getUrlVars()["search"].split("+").length; k++)
+		{
+		  if (getUrlVars()["search"].split("+")[k].toLowerCase() == getUrlVars()["search"].split("+")[k].toUpperCase())
+		  {
+		  	apizip = "?" + getUrlVars()["search"].split("+")[k];
+		  	break;
+		  }
+		}
+	
+	var appender = "<tr>"+
+		"<td class='namecol' align='left'>Name</td>"+
+		"<td class='zipcol' align='left'>ZIP</td>"+
+		"<td class='pricecol' align='left'>Price</td>"+
+		"<td class='typecol' align='left'>Type</td>"+
+		"<td class='subtypecol' align='left'>SubType</td>";
+		
+	$(".infotable").prepend(appender + "</tr><tr class='apphere'><td>&nbsp;</td></tr>");
+	var subtype = getUrlVars()["subtype"];
+	if (subtype)
+		if (~subtype.indexOf("+"))
+			subtype = subtype.replace("+", " ");
+    //$.getJSON("https://creator.zoho.com/api/json/whats-up/view/Database?authtoken=6ada6581e67344459e4502911e408c22&scope=creatorapi&callback=?",
+    $.ajax({
+    url: 'api.php?' + page + apizip,
+    data: "",
+    dataType: 'json',
+	success: function(data)
+	{
+		$.each(data, function(k,item)
+		{
+
+    //$.getJSON("api.php",
+	//function(data)
+	//{
+	//	$.each(data, function(i,item)
+	//	{
+			if (getUrlVars()["search"] == "" || getUrlVars()["search"] == "Enter+ZIP..." || getUrlVars()["search"] == "Enter%2BZIP..." || searchName(item) || getUrlVars()["search"] == item[2])
+			if (getUrlVars()["type"].replace(/%20/g, " ").toLowerCase() == item[14].toLowerCase() || getUrlVars()["type"] == "All")
+			if (subtype == "All" || subtype == null || item[15].toLowerCase().indexOf(subtype.toLowerCase()) != -1)
+			{
+				eventArray[i] = new Array();
+				eventArray[i][0] = item[1];
+				eventArray[i][1] = item[2];
+				if (item[5].split(".")[0].length < 3)
+					eventArray[i][2] = item[5].replace("$", "$0");
+				else
+					eventArray[i][2] = item[5];
+				eventArray[i][3] = item[14];
+				eventArray[i][4] = item[15];
+				eventArray[i][5] = item[22];
+				eventArray[i][6] = item[4].replace(/Cash/g, "GCash");
+				i++;
+			}
+		});
+		setTimeout(innerAppend(eventArray), 500);
+	}});
+	
+	
+	
+	$(".namecol").click(function(event)
+	{
+		var temp = eventArray;
+		temp.sort();
+		
+		if (nameup)
+		{
+			zipup = false;
+			nameup = false;
+			typeup = false;
+			priceup = false;
+			temp.reverse();
+		}
+		else
+			nameup = true;
+			
+		innerAppend(temp);
+	});
+	
+	$(".zipcol").click(function(event)
+	{
+		var temp = eventArray;
+		var holder;
+		for(var z = 0; z < temp.length; z++)
+		{
+			if (temp[z])
+			{
+				holder = temp[z][0];
+				temp[z][0] = temp[z][1];
+				temp[z][1] = holder;
+			}
+		}
+		temp.sort();
+		for(var z = 0; z < temp.length; z++)
+		{
+			if (temp[z])
+			{
+				holder = temp[z][0];
+				temp[z][0] = temp[z][1];
+				temp[z][1] = holder;
+			}
+		}
+		
+		if (zipup)
+		{
+			zipup = false;
+			nameup = false;
+			typeup = false;
+			priceup = false;
+			temp.reverse();
+		}
+		else
+			zipup = true;
+		
+		innerAppend(temp);
+	});
+	
+	$(".typecol").click(function(event)
+	{
+		var temp = eventArray;
+		var holder;
+		for(var z = 0; z < temp.length; z++)
+		{
+			if (temp[z])
+			{
+				holder = temp[z][0];
+				temp[z][0] = temp[z][3];
+				temp[z][3] = holder;
+			}
+		}
+		temp.sort();
+		for(var z = 0; z < temp.length; z++)
+		{
+			if (temp[z])
+			{
+				holder = temp[z][0];
+				temp[z][0] = temp[z][3];
+				temp[z][3] = holder;
+			}
+		}
+		
+		if (typeup)
+		{
+			zipup = false;
+			nameup = false;
+			typeup = false;
+			priceup = false;
+			temp.reverse();
+		}
+		else
+			typeup = true;
+
+
+		innerAppend(temp);
+	});
+	
+	$(".pricecol").click(function(event)
+	{
+		var temp = eventArray;
+		var holder;
+		
+		for(var z = 0; z < temp.length; z++)
+		{
+			if (temp[z])
+			{
+				holder = temp[z][0];
+				temp[z][0] = temp[z][6];
+				temp[z][6] = holder;
+			}
+		}
+		temp.sort();
+		for(var z = 0; z < temp.length; z++)
+		{
+			if (temp[z])
+			{
+				holder = temp[z][0];
+				temp[z][0] = temp[z][6];
+				temp[z][6] = holder;
+			}
+		}
+		
+		if (priceup)
+		{
+			zipup = false;
+			nameup = false;
+			typeup = false;
+			priceup = false;
+			temp.reverse();
+		}
+		else
+			priceup = true;
+
+
+		innerAppend(temp);
+	});
+
+
+});
+
+function searchName(item)
+{
+	var temp = (item[1] + "").replace(/_/g, " ").split(" ");
+	var search = getUrlVars()["search"].split("+");
+	var zip = -1;
+	for (var z = 0; z < search.length; z++)
+	{
+		if (search[z].toLowerCase() == search[z].toUpperCase() && search[z].length == 5)
+			zip = z;
+	}
+	for (var z = 0; z < temp.length; z++)
+	{
+		for (var x = 0; x < search.length; x++)
+		{
+			if (zip != -1)
+			{
+				if (temp[z].toLowerCase().indexOf(search[x].toLowerCase()) != -1 && item[2] == search[zip])
+					return true;
+			}
+			else
+			{
+				if (temp[z].toLowerCase().indexOf(search[x].toLowerCase()) != -1)
+					return true;
+			}
+		}
+	}
+	return false;
+}
+
+function innerAppend(array)
+	{
+		$(".tabletr").remove();
+		var app;
+		if (array.length < 1)
+			$(".body").append("<center>No results found!</center>");
+		else
+		{
+			for (var z = 0; z < array.length; z++)
+			{
+				try
+				{
+				  app = '<tr name="tabletr" class="tabletr" onclick="window.location = '+"'page.html?ID=" + array[z][5] + "'"+'">'+
+						"<td class='atd' align='left'>" + array[z][0].replace(/_/g, " ") + "</td>"+
+						"<td class='atd' align='left'>" + array[z][1] + "</td>";
+							
+						if (array[z][6] == "GCash" || array[z][6] == "Cash")	
+						app += "<td class='atd' align='left'>" + array[z][2] + "</td>";
+						else if (array[z][6] == "Free")
+						app += "<td class='atd' align='left'><font color=green>Free!</font></td>";
+						else if (array[z][6] == "Ticket")
+						app += "<td class='atd' align='left'><font color=blue>Ticket</font></td>";
+						else if (array[z][6] == "Unknown")
+						app += "<td class='atd' align='left'><font color=red>Unknown</font></td>";
+						
+						app += "<td class='atd' align='left'>" + array[z][3] + "</td>"+
+							"<td class='atd' align='left'>"; 
+							
+						if(array[z][4])
+							for (var n = 0; n < array[z][4].split(",").length; n++)
+							{
+                                                                try
+                                                                {
+								  app += array[z][4].split(",")[n].replace(/\[/g, "").replace(/\]/g, "").replace(/\,/g, "<br/>") + "<br/>";
+                                                                }
+                                                                catch(ej){}
+							} 
+						else
+							app += "Other";
+							
+						app += "</td>";
+						
+						app += "<td><a alt='Report Event' href='javascript:void(window.open(\"report.php?ID=" + array[z][5] + "\", \"_blank\"));'>X</a></td>";
+						
+						app += "</tr>";
+							
+						$(".infotable").append(app);
+				}
+				catch(ex)
+				{alert("Something broke!" + ex);}
+			}
+			var appstr = "";
+			if (eventArray.length == 100)
+			{
+			appstr += "<form action='results.html' id='resForm1'><input type='hidden' value='" + getUrlVars()["search"].replace("%2B", "+") + "' name='search'/>";
+			appstr += "<input type='hidden' value='" + getUrlVars()["type"] + "' name='type'/>";
+			appstr +="<input type='hidden' value='" + (page + 1) + "' name='page'/>";
+			if(getUrlVars()["subtype"])
+			  appstr += "<input type='hidden' value='" + getUrlVars()["subtype"] + "' name='subtype'/>";
+			appstr += "<input type='submit' value='next'/>";
+			appstr += "</form>";
+			}
+			
+			if (page > 0)
+			{
+			appstr += "<form action='results.html' id='resForm2'><input type='hidden' value='" + getUrlVars()["search"].replace("%2B", "+") + "' name='search'/>";
+			appstr += "<input type='hidden' value='" + getUrlVars()["type"] + "' name='type'/>";
+			appstr += "<input type='hidden' value='" + (page - 1) + "' name='page'/>";
+			if(getUrlVars()["subtype"])
+			  appstr += "<input type='hidden' value='" + getUrlVars()["subtype"] + "' name='subtype'/>";
+			appstr += "<input type='submit' value='prev'/>";
+			appstr += "</form>";
+			}
+
+			$(".body").append(appstr);
+		}
+	}
+</script>
+
+
+<div class="footer" >
+	<table cellpadding="0" cellspacing="0" style="width: 100%">
+		<tr>
+			<td align="left">
+			<span style="color: rgb(113, 112, 112); font-family: 'Open Sans', sans-serif; font-size: 19px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: 26px; orphans: 2; text-align: -webkit-auto; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; display: inline !important; float: none; ">
+			© Christopher Johnson
+			</span>
+			</td>
+			<td align="left" width="10%">
+			<a href="about.html">About Us</a>
+			</td>
+		</tr>
+	</table>
+</div>
+</center>
+
+</body>
+
+</html>

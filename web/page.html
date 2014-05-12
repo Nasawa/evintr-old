@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html>
+<head>
+		<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=8; IE=9" />
+<style type="text/css">
+div
+{
+	
+}
+.img
+{
+	border-radius: 5px;
+	width: 168 px;
+	height: 100px;
+}
+.lf_action_bar
+{
+visibility:visible;
+}
+
+</style>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="nearby.js"></script>
+<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBhzyIxjhgXbL2MdJSlQkg8JPBFWRYBLTU&sensor=false"></script>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+<title>evintr</title><script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-32170936-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+<link rel="icon" type="image/png" href="favicon.ico">
+</head><body style="background-color: #d4e1f4; font-family: 'Open Sans', sans-serif;">
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=229427257111197";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+<center>
+<div class="header" style="min-height:50px; width: 800px">
+	<table align="center" style="width: 100%">
+		<tr>
+			<td align="left" style="width: 50%" onclick="window.location='homepage.html'">
+			<h1>
+			<span style="color: rgb(113, 112, 112); font-family: 'Open Sans', sans-serif; font-size: 45px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: 26px; orphans: 2; text-align: -webkit-auto; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; display: inline !important; float: none; ">
+			evintr
+			</span>
+			</h1>
+			<h3>
+			<span style="color: rgb(113, 112, 112); font-family: 'Open Sans', sans-serif; font-size: 19px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: 26px; orphans: 2; text-align: -webkit-auto; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; display: inline !important; float: none; ">
+			The Event Engine
+			</span>
+			</h3>
+			</td>
+			<td align="right">
+			<div align="left" style="width:95%;">			
+			<form action="results.html" id="form" style="display:inline;">
+				<select name="type" id="typebar" onchange="bartypeChange()">
+					<option value="All">Search All                      </option>					
+					<option value="Sports">Sports</option>
+					<option value="Movies">Movies</option>
+					<option value="Night Life">Night Life</option>
+					<option value="Sales">Sales</option>
+					<option value="Parks">Parks</option>
+					<option value="Music">Music</option>
+					<option value="Arts">Arts</option>
+					<option value="Parties">Parties</option>
+					<option value="Other">Other</option>				
+				</select>
+			<input type="text" name="search" id="zipbar" style="border-radius: 5px; padding: 0px;" onClick="value='';"  value="Enter ZIP..." size="7"/><input type="submit" name="go" value="Go!"/><br/>
+			<select name="subtype" style="visibility: hidden;" id="subtypebar"/>
+
+			</form>
+			</div>
+			</td>
+		</tr>
+	</table>
+</div>
+
+<div class="body" style="min-height:500px; background-color:white; border-radius:5px; max-height:none; width: 800px;">
+<table align="left" cellpadding="5" width="100%" class="infotable">
+		<tr>
+		<td class="text" align="left">
+		</td>
+		<td class="img" align="right"></td>
+		</tr>
+</table>
+</div>
+<div class="commenter" style="width: 800px;"><!--style="background-color:white; border-radius:5px;"-->
+<script type='text/javascript' src='http://zor.livefyre.com/wjs/v1.0/javascripts/livefyre_init.js'>
+</script>
+<script type='text/javascript'>
+var fyre = LF({site_id: 307681});
+</script>
+</div>
+
+
+<script type="text/javascript">
+var lat;
+var lng;
+var addr;
+var zip;
+
+function initialize(lat, lng) 
+{
+	var myOptions = 
+	{
+		center: new google.maps.LatLng(lat, lng),
+		zoom: 13,
+		mapTypeId: google.maps.MapTypeId.ROADMAP
+	};
+	
+	var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+}
+
+function getUrlVars() 
+{
+    var vars = {};
+    var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+        vars[key] = value;
+    });
+    return vars;
+}
+
+function cbm()
+{
+	var geocoder = new google.maps.Geocoder();
+
+	if(!address)
+	{
+		var address = addr + ", " + zip
+	}
+
+	if (geocoder) 
+	{
+	   	 geocoder.geocode({ 'address': address }, function (results, status) 
+	   	 {
+	        if (status == google.maps.GeocoderStatus.OK) 
+	        {
+	            initialize(results[0].geometry.location.lat(), results[0].geometry.location.lng());
+	        } 
+	        else 
+	        {
+	            console.log('No results found: ' + status);
+	        }
+	    });
+	}
+}
+
+function big()
+{
+	$('.body').animate(
+	{
+		height: '+=100',
+		width:  '+=100'
+	}, 1000, function(){});
+
+
+	$('#map_canvas').animate(
+	{
+		height: '+=100',
+		width:  '+=100'
+	}, 1000, function(){});
+}
+
+function small()
+{
+	if ($('#map_canvas').width() > '300')
+	{
+		$('.body').animate(
+		{
+			height: '-=100',
+			width:  '-=100'
+		}, 1000, function(){});
+	
+		$('#map_canvas').animate(
+		{
+			height: '-=100',
+			width:  '-=100'
+		}, 1000, function(){});
+	}
+}
+
+
+$(document).ready(function()
+{
+
+	var id = getUrlVars()["ID"];
+	var priv = "";
+	if(getUrlVars()["private"] != null)
+		priv = "?" + getUrlVars()["private"];
+	
+	$.ajax({
+    url: 'papi.php?' + id + priv,
+    data: "",
+    dataType: 'json',
+	success: function(data)
+	{
+		$.each(data, function(k,item)
+		{
+			//if (id == item[22] && name == item[1].replace(/%20/g, " ").replace(/%27/g, "\'") && zip == item[2] && ty == item[14])
+			if (id == item[22])
+			{
+				addr = item[3];
+				addr = addr.replace(/ /g, "+");
+				zip = item[2];			
+				$(".body").prepend('<center><h1 style="display:inline;">' + item[1].replace(/_/g, " ") + "</h1></center>")
+				//var output = "<tr><td align='left'><td align="right"><img src="' + item.ImageURL1.split('\"')[1] + '"></img></td>'
+				//output +=    "<tr><td align='left'><b>Address:      </b>  " + item.Event_Address + '</td><td align="right"><img src="' + item.ImageURL2.split('\"')[1] + '"></img></td>'
+				//output +=    "<tr><td class='text'><b>Description:  </b>  " + item.Description + '</td><td class="img"><img src="' + item.ImageURL3.split('\"')[1] + '"></img></td>'
+				
+				var toutput = ""
+				toutput   += "<b>Description:  </b>" + item[9] + "<br/>"
+				toutput   += "<b>Address:      </b>" + item[3] + ", " + item[2] + "<br/>"
+				if(item[8].length > 5)
+					toutput   += "<b>Phone Number: </b>" + item[8] + "<br/>"
+				if(item[4] == "Ticket" && item[6].length > 1)
+				{
+					if (item[6].indexOf('http') == -1)
+						toutput   += "<b>Ticket:</b><a href='http://" + item[6] + "' target='_blank'>http://" + item[6] + "</a><br/>"
+					else
+						toutput   += "<b>Ticket:</b><a href='" + item[6] + "' target='_blank'>" + item[6] + "</a><br/>"
+				}
+				if(item[4] == "Cash")
+					toutput   += "<b>Price:</b>" + item[5] + "<br/>"
+				toutput   += "<b>Start Date:   </b>" + item[10] + "<br/>"
+				toutput   += "<b>End   Date:&nbsp;   </b>" + item[11] + "<br/>"
+				
+				toutput   += "<a onclick='small()' href='javascript:void(0);'>-</a>" + "&nbsp;&nbsp;&nbsp;" + "<a onclick='big()' href='javascript:void(0);'>+</a><br/>"
+				toutput   += "<div id='map_canvas' style='width:300px; height:200px; border-radius:5px;'></div>"
+				$(".text").append(toutput);
+				
+				var ioutput = ""
+				if (item[16].split("")[1]+"" !== "undefined")
+					ioutput    += '<img src="' + item[16] + '" class="img"></img> '
+				if (item[17].split("")[1]+"" !== "undefined")
+					ioutput    += '<img src="' + item[17] + '" class="img"></img><br/><br/>'
+				if (item[18].split("")[1]+"" !== "undefined")
+					ioutput    += '<img src="' + item[18] + '" class="img"></img> '
+				if (item[19].split("")[1]+"" !== "undefined")
+					ioutput    += '<img src="' + item[19] + '" class="img"></img><br/><br/>'
+				if (item[20].split("")[1]+"" !== "undefined")
+					ioutput    += '<img src="' + item[20] + '" class="img"></img> '
+				if (item[21].split("")[1]+"" !== "undefined")
+					ioutput    += '<img src="' + item[21] + '" class="img"></img>'
+
+				if (ioutput != "")
+					$(".img").append(ioutput);
+					
+				var script = document.createElement( 'script' );
+        		script.type = 'text/javascript';
+      		    script.src = 'http://maps.google.com/maps/api/js?sensor=false&callback=cbm';
+     		    $("body").append( script );
+     		    
+     		    //var loc = window.location.toString();
+     		    //$(".fbcommenter").append("");
+					//"<div class=\"fb-comments\" data-href=\"" + loc.replace(/\+/g, " ") + "\" data-num-posts=\"20\" data-width=\"400\"></div>")
+					
+//					var xml = "http://maps.googleapis.com/maps/api/geocode/xml?address=" + addr + "," + zip + "&sensor=false",
+//    				xmlDoc = $.parseXML( xml ),
+//    				$xml = $( xmlDoc ),
+//    				$lat = $xml.find( "lat" ),
+//    				$lng = $xml.find( "lng" );
+    				
+//    				$.ajax(
+//    				{
+//  						type: 'GET',
+//  						url: "https://maps.googleapis.com/maps/api/geocode/xml?address=" + addr + "," + zip + "&sensor=false",
+//  						dataType: "xml",
+//  						success: function(xml)
+// 						{
+//    						lat = $(xml).find('lat').text();
+//    						lng = $(xml).find('lng').text();
+//    						alert("blah");
+//  						}   
+//					});
+    				
+//    				loadXMLDoc("https://maps.googleapis.com/maps/api/geocode/xml?address=" + addr + "," + zip + "&sensor=false")
+			}
+		});
+	}});
+});
+
+
+//function loadXMLDoc(url)
+//{
+//if (window.XMLHttpRequest)
+//  {// code for IE7+, Firefox, Chrome, Opera, Safari
+//  xmlhttp=new XMLHttpRequest();
+//  }
+//else
+//  {// code for IE6, IE5
+//  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+//  }
+//xmlhttp.onreadystatechange=function()
+//  {
+//  if (xmlhttp.readyState==4 && xmlhttp.status==200)
+//    {
+//    	try
+//    	{
+//    	x = xmlhttp.responseXML.documentElement.getElementsByTagName("lat");
+//    	xx=xmlhttp.responseXML.documentElement.getElementsByTagName("lng");
+//    	lat = x[0].firstChild.nodeValue;
+//    	lng = xx[0].firstChild.nodeValue;
+//    	initialize(lat, lng);
+//    	}
+//    	catch(er)
+//    	{
+//    		alert("Whoops! This address may be invalid. We apologize for the inconvenience, and we'll notify our team right away.");
+//    	}
+//    }
+//    }
+//xmlhttp.open("GET",url,true);
+//xmlhttp.send();
+//}
+</script>
+
+<div class="footer" style="width: 800px;">
+	<table cellpadding="0" cellspacing="0" style="width: 100%">
+		<tr>
+			<td align="left">
+			<span style="color: rgb(113, 112, 112); font-family: 'Open Sans', sans-serif; font-size: 19px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: 26px; orphans: 2; text-align: -webkit-auto; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; display: inline !important; float: none; ">
+			© Christopher Johnson
+			</span>
+			</td>
+			<td align="left" width="10%">
+			<a href="about.html">About Us</a>
+			</td>
+		</tr>
+	</table>
+</div>
+</center>
+</body>
+
+</html>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">evintr</string>
+    <string name="types">Event Type</string>
+
+    <string-array name="event_array">
+        <item>All</item>
+        <item>Sports</item>
+        <item>Movies</item>
+        <item>Night Life</item>
+        <item>Sales</item>
+        <item>Parks</item>
+        <item>Music</item>
+        <item>Arts</item>
+        <item>Parties</item>
+        <item>Other</item>
+    </string-array>
+    
+    <string-array name="type_array">
+        <item>Sports</item>
+        <item>Movies</item>
+        <item>Night Life</item>
+        <item>Sales</item>
+        <item>Parks</item>
+        <item>Music</item>
+        <item>Arts</item>
+        <item>Parties</item>
+        <item>Other</item>
+    </string-array>
+    
+    <string-array name="price_array">
+        <item>Free</item>
+        <item>Cash</item>
+        <item>Ticket</item>
+        <item>Unknown</item>
+    </string-array>
+    
+    <string-array name="rate_array">
+        <item>Daily</item>
+        <item>Weekly</item>
+        <item>Every Other Week</item>
+        <item>Weekdays</item>
+        <item>Weekends</item>
+    </string-array>
+    
+
+</resources>

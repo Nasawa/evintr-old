@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html xmlns:fb="http://ogp.me/ns/fb#">
+
+<head>
+<style type="text/css">
+div
+{
+	width: 800px;
+}
+.hide
+{
+	visibility:collapse;
+}
+</style>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="nearby.js"></script>
+<script type="text/ecmascript" src="datetimepicker.js"></script>
+<title>evintr</title>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-32170936-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+<link rel="icon" type="image/png" href="favicon.ico">
+</head>
+<body style="background-color: #d4e1f4;" onload="fbadd()">
+<center>
+<div class="header" style="min-height:50px;">
+	<table align="center" style="width: 100%">
+		<tr>
+			<td align="left" style="width: 50%" onclick="window.location='homepage.html'">
+			<h1>
+			<span style="color: rgb(113, 112, 112); font-family: 'Open Sans', sans-serif; font-size: 45px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: 26px; orphans: 2; text-align: -webkit-auto; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; display: inline !important; float: none; ">
+			evintr
+			</span>
+			</h1>
+			<h3>
+			<span style="color: rgb(113, 112, 112); font-family: 'Open Sans', sans-serif; font-size: 19px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: 26px; orphans: 2; text-align: -webkit-auto; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; display: inline !important; float: none; ">
+			The Event Engine
+			</span>
+			</h3>
+			</td>
+			<td align="right">
+			<div align="left" style="width:95%;">
+			<form action="results.html" id="form" style="display:inline;">
+				<select name="type" id="typebar" onchange="bartypeChange()">
+					<option value="All">Search All                      </option>					
+					<option value="Sports">Sports</option>
+					<option value="Movies">Movies</option>
+					<option value="Night Life">Night Life</option>
+					<option value="Sales">Sales</option>
+					<option value="Parks">Parks</option>
+					<option value="Music">Music</option>
+					<option value="Arts">Arts</option>
+					<option value="Parties">Parties</option>
+					<option value="Other">Other</option>				
+				</select>
+			<input type="text" name="search" id="zipbar" style="border-radius: 5px; padding: 0px;" onClick="value='';"  value="Enter ZIP..." size="7"/><input type="submit" name="go" value="Go!"/><br/>
+			<select name="subtype" style="visibility: hidden;" id="subtypebar">
+			</select>
+
+			</form>
+			</div>
+			</td>
+		</tr>
+	</table>
+</div>
+
+<div class="body" style="min-height:450px;">
+<!--<form method="POST" target="foo" action="https://creator.zoho.com/api/json/whats-up/Event_Form/add/">
+
+<input type="hidden" name ="authtoken" id="authtoken" value="6ada6581e67344459e4502911e408c22"/>	
+<input type="hidden" name ="scope" id="scope" value="creatorapi"/>-->
+<form method="POST" target="_self" action="add.php" id="adder">
+<input type="hidden" name ="Subtype"id="subtypeb" value=""/>
+<input type="hidden" name ="Verification_Number" id="vn"/>
+
+<table align="center" cellpadding="4" width="98%" class="infotable">
+
+<tr><td align="left"><b>Event Name*</b></td><td align="right"><input type="text" id="ename" required="required" name="Event_Name"/></td></tr>
+
+<tr><td align="left"><b>Event ZIP Code*</b></td><td align="right"><input type="text" id="ezipcode" required="required" name="Event_ZIP_Code"/></td></tr>
+
+<tr><td align="left"><b>Street Address*</b></td><td align="right"><input type="text" id="eaddr" required="required" name="Event_Address"/></td></tr>
+
+<tr><td align="left"><b>Price Info*</b></td><td align="right"><select name="Price_Info" id="info" onchange="check()">
+															  <option value="Free">Free</option>
+															  <option value="Cash">Cash</option>
+															  <option value="Ticket">Ticket</option>
+															  <option value="Unknown">Unknown</option>
+															  </select></td></tr>
+		
+<tr class="hide" id="pricerow"><td align="left"><b>Price</b></td><td align="right"><input type="text" id="price" name="Price"/></td></tr>
+
+<tr class="hide" id="ticketrow"><td align="left"><b>Ticket Link</b></td><td align="right"><input type="text" id="ticketl" name="Ticket_Link"/></td></tr>
+		
+<tr><td align="left"><b>Email Address*</b></td><td align="right"><input type="email" id="emailaddr" required="required" name="Email_Address"/></td></tr>
+
+<tr><td align="left"><b>Phone Number (555-555-5555)</b></td><td align="right"><input type="tel" id="pnum" name="Phone"/></td></tr>
+
+<tr><td align="left"><b>Description*</b></td><td align="right"><textarea name="Description" id="desc" required="required" rows="5" cols="20"></textarea></td></tr>
+		
+<tr><td align="left"><b>Start Date*</b></td><td align="right"><input type="datetime" required="required" id="sd" placeholder="24-hour" name="Start_Date"/><a href="javascript:NewCal('sd','mmmddyyyy',true,24)"><img src="cal.gif" width="16" height="16" border="0" alt="Pick a date"></a></td></tr>
+
+<tr><td align="left"><b>End Date</b></td><td align="right"><input type="datetime" id="ed" placeholder="24-hour" name="End_Date"/><a href="javascript:NewCal('ed','mmmddyyyy',true,24)"><img src="cal.gif" width="16" height="16" border="0" alt="Pick a date"></a></td></tr>
+
+
+<tr><td align="left"><b>Are these regular hours?</b></td><td align="right"><input type="radio" name="Regular" id="regyes" onchange="regcheck()" value="Yes"/>Yes<br/><input type="radio" name="Regular" checked="checked" onchange="regcheck()" value="No"/>No&nbsp;</td></tr>
+
+<tr class="hide" id="raterow"><td align="left"><b>Recurrance rate</b></td><td align="right"><select name="Rate" id="rate">
+															  <option value="Daily">Daily</option>
+															  <option value="Weekly">Weekly</option>
+															  <option value="Every Other Week">Every Other Week</option>
+															  <option value="Weekdays">Weekdays</option>
+															  <option value="Weekends">Weekends</option>
+															  </select></td></tr>
+		
+<tr><td align="left"><b>Type*</b></td><td align="right"><select name="eType" id="typea" onchange="typecheck()">
+															  <option value="Sports">Sports</option>
+											  				  <option value="Movies">Movies</option>
+											  				  <option value="Night Life">Night Life</option>
+											  				  <option value="Sales">Sales</option>
+											  				  <option value="Parks">Parks</option>
+											  				  <option value="Music">Music</option>
+											  				  <option value="Arts">Arts</option>
+											  				  <option value="Parties">Parties</option>
+											  				  <option value="Other">Other</option>
+															  </select></td></tr>
+
+<tr id="subtyperow"><td align="left"><b>Subtype (Use Ctrl/Command button to select multiple subtypes)</b></td><td align="right"><select multiple="multiple" id="subtypea">
+															  <option value="Tennis">Tennis</option>
+											  				  <option value="Football">Football</option>
+											  				  <option value="Baseball">Baseball</option>
+											  				  <option value="Basketball">Basketball</option>
+											  				  <option value="Volleyball">Volleybal</option>
+											  				  <option value="Disc Golf">Disc Golf</option>
+											  				  <option value="Putt Putt">Putt Putt</option>
+											  				  <option value="Bowling">Bowling</option>
+											  				  <option value="Racquetball">Racquetball</option>
+											  				  <option value="Other">Other</option>
+															  </select></td></tr>
+															  
+<tr><td align="left"><b>Is this event public?</b></td><td align="right"><input type="radio" name="Public" id="pubyes" checked="checked" value="Public"/>Public<br/><input type="radio" name="Public" value="Private"/>Private</td></tr>
+
+
+<tr>                       <td align="left"><b>Image URL</b></td><td align="right"><input type="text" id="ImageURL1" name="ImageURL1" oninput="imgr()"/></td></tr>
+
+<tr class="hide" id="img2"><td align="left"><b>Image URL</b></td><td align="right"><input type="url" id="ImageURL2" name="ImageURL2" oninput="imgr()"/></td></tr>
+
+<tr class="hide" id="img3"><td align="left"><b>Image URL</b></td><td align="right"><input type="url" id="ImageURL3" name="ImageURL3" oninput="imgr()"/></td></tr>
+
+<tr class="hide" id="img4"><td align="left"><b>Image URL</b></td><td align="right"><input type="url" id="ImageURL4" name="ImageURL4" oninput="imgr()"/></td></tr>
+
+<tr class="hide" id="img5"><td align="left"><b>Image URL</b></td><td align="right"><input type="url" id="ImageURL5" name="ImageURL5" oninput="imgr()"/></td></tr>
+
+<tr class="hide" id="img6"><td align="left"><b>Image URL</b></td><td align="right"><input type="url" id="ImageURL6" name="ImageURL6" oninput="imgr()"/></td></tr>
+
+</table>
+
+<input type="button" class="button" value="Add Record"/>
+
+</form>
+
+<!--<iframe align="middle" height='1000px' width='100%' name='zoho-Event_Form' frameborder='0' allowTransparency='true' scrolling='auto' src='https://creator.zoho.com/keitonasawa/whats-up/form-embed/Event_Form/'></iframe> -->
+</div>
+
+<div id="fb-root"></div>
+<script src="http://connect.facebook.net/en_US/all.js"></script>
+<script id="info"></script>
+
+<script type="text/javascript">
+function getUrlVars() 
+{
+    var vars = {};
+    var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) 
+    {
+        vars[key] = value;
+    });
+    return vars;
+}
+
+$(document).ready(function()
+{	
+	document.getElementById("vn").value = Math.floor(Math.random()*1000001)
+	$(".button").click(function(event)
+	{
+		if (document.getElementById("pnum").value.length > 0 && document.getElementById("pnum").value.length != 12)
+		{
+			alert("Whoops! Your phone number is in the wrong format! Please try again.");
+			event.preventDefault();
+		}
+		else if (document.getElementById("ezipcode").value.length != 5 && document.getElementById("ezipcode").value.toUpperCase() == document.getElementById("ezipcode").value.toLowerCase())
+		{
+			alert("Whoops! Your Zip Code is in the wrong format! Please try again.");
+			event.preventDefault();
+		}
+		else if (document.getElementById("ed").value.length < 2)
+		{
+			document.getElementById("ed").value = document.getElementById("sd").value;
+			checker();
+		}
+		else
+		{
+			checker();
+		}
+	});
+});
+
+function checker()
+{
+	var sub = document.getElementById('subtypea');
+	var arr = new Array();
+	var c = 0;
+	var val = "";
+	for (i = 0; i < sub.options.length; i++)
+	{
+		if(sub.options[i].selected)
+		{
+			arr[c] = sub.options[i].value;
+			c++;
+		}
+	}
+	for (i = 0; i < arr.length; i++)
+	{
+		if (i < arr.length - 1)
+			val += arr[i] + ",";
+		else
+			val += arr[i];
+	}
+	if (val != "")
+		document.getElementById('subtypeb').value = val;
+	else
+		document.getElementById('subtypeb').value = "Other";
+		
+	//alert(document.getElementById('subtypeb').value);
+	//return;
+		
+	
+	if(document.getElementById("ename").value != "")
+			{
+			var val = document.getElementById("ename").value;
+			document.getElementById("ename").value = val.split(' ').join('_')
+			if(document.getElementById("ezipcode").value != "")
+			if(document.getElementById("eaddr").value != "")
+			if(document.getElementById("info").value != "")
+			if(document.getElementById("emailaddr").value != "")
+			if(document.getElementById("desc").value != "")
+			if(document.getElementById("sd").value != "")
+			document.forms["adder"].submit();
+			}
+}
+function imgr()
+{
+	var i1 = document.getElementById("ImageURL1");
+	var i2 = document.getElementById("ImageURL2");
+	var i3 = document.getElementById("ImageURL3");
+	var i4 = document.getElementById("ImageURL4");
+	var i5 = document.getElementById("ImageURL5");
+		
+	var ri2 = document.getElementById("img2");
+	var ri3 = document.getElementById("img3");
+	var ri4 = document.getElementById("img4");
+	var ri5 = document.getElementById("img5");
+	var ri6 = document.getElementById("img6");
+	
+	if (i1.value !== "")
+		ri2.style.visibility = "visible";
+	else
+		ri2.style.visibility = "collapse";
+		
+	if (i2.value !== "")
+		ri3.style.visibility = 'visible';
+	else
+		ri3.style.visibility = 'collapse';
+		
+	if (i3.value !== "")
+		ri4.style.visibility = 'visible';
+	else
+		ri4.style.visibility = 'collapse';
+		
+	if (i4.value !== "")
+		ri5.style.visibility = 'visible';
+	else
+		ri5.style.visibility = 'collapse';
+		
+	if (i5.value.length != 0)
+		ri6.style.visibility = 'visible';
+	else
+		ri6.style.visibility = 'collapse';
+
+}
+function check()
+{
+	var info = document.getElementById("info");
+	var price= document.getElementById("pricerow");
+	var ticket=document.getElementById("ticketrow");
+	var p    = document.getElementById("price");
+	var t    = document.getElementById("ticketl");
+	if (info.value == "Cash")
+	{
+		ticket.style.visibility = "collapse";
+		price.style.visibility = "visible";
+		p.value = "";
+		t.value = "";
+	}
+	else if (info.value == "Ticket")
+	{
+		ticket.style.visibility = "visible";
+		price.style.visibility = "collapse";
+		p.value = "";
+		t.value = "";
+	}
+	else
+	{
+		ticket.style.visibility = "collapse";
+		price.style.visibility = "collapse";
+		p.value = "";
+		t.value = "";
+	}
+}
+
+function regcheck()
+{
+	var yes = document.getElementById("regyes");
+	var rr  = document.getElementById("raterow");
+	if (yes.checked)
+	{
+		rr.style.visibility = "visible";
+	}
+	else
+	{
+		rr.style.visibility = "collapse";
+	}
+}
+
+function typecheck()
+{
+var type = document.getElementById("typea");
+var subtype = document.getElementById("subtypea");
+var subtyperow = document.getElementById("subtyperow");
+
+subtype.innerHTML = ""
+
+if (type.value=="Movies")
+	subtyperow.style.visibility='collapse';
+else
+	subtyperow.style.visibility='visible';
+
+ if (type.value=="Sports")
+ {
+    subtype.innerHTML += '<option value="Tennis">Tennis</option>'
+    subtype.innerHTML += '<option value="Football">Football</option>'
+    subtype.innerHTML += '<option value="Baseball">Baseball</option>'
+    subtype.innerHTML += '<option value="Basketball">Basketball</option>'
+    subtype.innerHTML += '<option value="Volleyball">Volleyball</option>'
+    subtype.innerHTML += '<option value="Disc Golf">Disc Golf</option>'
+    subtype.innerHTML += '<option value="Golf">Golf</option>'
+    subtype.innerHTML += '<option value="Putt Putt">Putt Putt</option>'
+    subtype.innerHTML += '<option value="Bowling">Bowling</option>'
+    subtype.innerHTML += '<option value="Racquetball">Racquetball</option>'
+    subtype.innerHTML += '<option value="other">Other</option>'
+ }
+ else if (type.value=="Music")
+ {
+    subtype.innerHTML += '<option value="Concert">Concert</option>'
+    subtype.innerHTML += '<option value="Outdoor Performance">Outdoor Performance</option>'
+    subtype.innerHTML += '<option value="Open Mic">Open Mic</option>'
+    subtype.innerHTML += '<option value="General Admission">General Admission</option>'
+    subtype.innerHTML += '<option value="Other">Other</option>'
+ }
+ else if (type.value=="Sales")
+ {  
+    subtype.innerHTML += '<option value="Clothing">Clothing</option>'
+    subtype.innerHTML += '<option value="Shoe">Shoe</option>'
+    subtype.innerHTML += '<option value="Jewelry">Jewelry</option>' 
+    subtype.innerHTML += '<option value="Furniture">Furniture</option>'
+    subtype.innerHTML += '<option value="Appliance">Appliance</option>'
+    subtype.innerHTML += '<option value="Other">Other</option>'
+ }
+ else if (type.value=="Parks")
+ {
+    subtype.innerHTML += '<option value="Tennis">Tennis</option>'
+    subtype.innerHTML += '<option value="Hiking">Hiking</option>'
+    subtype.innerHTML += '<option value="Gardens">Gardens</option>'
+    subtype.innerHTML += '<option value="Disc golf">Disc Golf</option>'
+    subtype.innerHTML += '<option value="Playground">Playground</option>'
+    subtype.innerHTML += '<option value="Outdoor">Outdoor Performance</option>'
+    subtype.innerHTML += '<option value="Other">Other</option>'
+ }
+ else if (type.value=="Arts")
+ {
+    subtype.innerHTML += '<option value="Museums">Museums</option>'
+    subtype.innerHTML += '<option value="Theater">Theater</option>'
+    subtype.innerHTML += '<option value="Plays">Plays</option>'
+    subtype.innerHTML += '<option value="Outdoor Performance">Outdoor Performance</option>'
+    subtype.innerHTML += '<option value="General Admission">General Admission</option>'
+    subtype.innerHTML += '<option value="Other">Other</option>'
+ }
+ else if (type.value=="Night Life")
+ {
+    subtype.innerHTML += '<option value="Bars">Bars</option>'
+    subtype.innerHTML += '<option value="Clubs">Clubs</option>'
+    subtype.innerHTML += '<option value="Open Late">Open Late</option>'
+    subtype.innerHTML += '<option value="General Admission">General Admission</option>'
+    subtype.innerHTML += '<option value="Other">Other</option>'
+ }
+ else if (type.value=="Parties")
+ {
+    subtype.innerHTML += '<option value="Grand Opening">Grand Opening</option>'
+    subtype.innerHTML += '<option value="House Party">House Party</option>'
+    subtype.innerHTML += '<option value="Other">Other</option>'
+ }
+ else if (type.value=="Other")
+ {  
+    subtype.innerHTML += '<option value="Grand Opening">Grand Opening</option>'
+    subtype.innerHTML += '<option value="Public Event">Public Event</option>'
+    subtype.innerHTML += '<option value="Other">Other</option>'
+ }
+}
+
+window.fbInit = function()
+{
+	FB.asyncInit(
+	{
+		appId : '229427257111197', // App ID
+		channelUrl : 'channel.html', // Channel
+		// File
+		status : true, // check login status
+		cookie : true, // enable cookies to allow the server to access the
+		// session
+		xfbml : true
+	// parse XFBML
+	});
+	// Additional initialization code here
+};
+
+// Load the SDK Asynchronously
+(function(d)
+{
+	var js, id = 'facebook-jssdk';
+	if (d.getElementById(id))
+	{
+		return;
+	}
+	js = d.createElement('script');
+	js.id = id;
+	js.async = true;
+	js.src = "//connect.facebook.net/en_US/all.js";
+	d.getElementsByTagName('head')[0].appendChild(js);
+}(document));
+
+var accessToken = "Cheese";
+FB.getLoginStatus(function(response)
+{
+	var uid = null;
+	if (response.status === 'connected')
+	{
+		uid = response.authResponse.userID;
+		accessToken = response.authResponse.accessToken;
+	}
+});
+
+function fbadd()
+{
+	if(getUrlVars()["id"])
+	{
+		FB.api(getUrlVars()["id"] + "?" + "access_token=" + getUrlVars()["access_token"], function(res)
+		{
+			document.getElementById("ename").value = res.name;
+			document.getElementById("desc").value = res.description;
+			if (typeof res.venue.id !== 'undefined')
+			{
+				FB.api(res.venue.id + "?" + "access_token=" + getUrlVars()["access_token"], function(r)
+				{
+					if (typeof r.location.street !== 'undefined')
+						document.getElementById("eaddr").value = r.location.street;
+					if (typeof r.location.zip !== 'undefined')
+					{
+						if (r.location.zip.split("-")[1].length > 0)
+							document.getElementById("ezipcode").value = r.location.zip.split("-")[0];
+						else
+							document.getElementById("ezipcode").value = r.location.zip;
+					}
+				});
+			}
+			else
+				document.getElementById("eaddr").value = res.venue.name;
+			
+			var start = res.start_time;
+			var end   = res.end_time;
+			var month = ""
+			if (start.split("-")[1] == "01") month = "January";
+			else if (start.split("-")[1] == "02") month = "February";
+			else if (start.split("-")[1] == "03") month = "March";
+			else if (start.split("-")[1] == "04") month = "April";
+			else if (start.split("-")[1] == "05") month = "May";
+			else if (start.split("-")[1] == "06") month = "June";
+			else if (start.split("-")[1] == "07") month = "July";
+			else if (start.split("-")[1] == "08") month = "August";
+			else if (start.split("-")[1] == "09") month = "September";
+			else if (start.split("-")[1] == "10") month = "October";
+			else if (start.split("-")[1] == "11") month = "November";
+			else if (start.split("-")[1] == "12") month = "December";
+			
+			document.getElementById("sd").value = month + " " + start.split("-")[2].split("T")[0] + "," + start.split("-")[0] + " " + (parseInt(start.split("T")[1].split(":")[0], 10)) + ":" + start.split(":")[1] + ":" + start.split(":")[2];
+			
+			if (end.split("-")[1] == "01") month = "January";
+			else if (end.split("-")[1] == "02") month = "February";
+			else if (end.split("-")[1] == "03") month = "March";
+			else if (end.split("-")[1] == "04") month = "April";
+			else if (end.split("-")[1] == "05") month = "May";
+			else if (end.split("-")[1] == "06") month = "June";
+			else if (end.split("-")[1] == "07") month = "July";
+			else if (end.split("-")[1] == "08") month = "August";
+			else if (end.split("-")[1] == "09") month = "September";
+			else if (end.split("-")[1] == "10") month = "October";
+			else if (end.split("-")[1] == "11") month = "November";
+			else if (end.split("-")[1] == "12") month = "December";
+			
+			//alert(parseInt(end.split("T")[1].split(":")[0]));
+			document.getElementById("ed").value = month + " " + end.split("-")[2].split("T")[0] + "," + end.split("-")[0] + " " + (parseInt(end.split("T")[1].split(":")[0], 10)) + ":" + end.split(":")[1] + ":" + end.split(":")[2];
+
+		});
+	}
+}
+</script>
+
+<div class="footer" >
+	<table cellpadding="0" cellspacing="0" style="width: 100%">
+		<tr>
+			<td align="left">
+			<span style="color: rgb(113, 112, 112); font-family: 'Open Sans', sans-serif; font-size: 19px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: 26px; orphans: 2; text-align: -webkit-auto; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; display: inline !important; float: none; ">
+			© Christopher Johnson
+			</span>
+			</td>
+			<td align="left" width="10%">
+			<a href="about.html">About Us</a>
+			</td>
+		</tr>
+	</table>
+</div>
+</center>
+</body>
+
+</html>
